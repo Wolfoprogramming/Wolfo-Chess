@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>חידון שחמט</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .quiz-container { max-width: 500px; margin: 30px auto; padding: 30px; text-align: right; }
+    h3 { color: var(--accent-color); }
+    .option { display: block; margin: 10px 0; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px; cursor: pointer; }
+    body.light-mode .option { background: rgba(0,0,0,0.03); }
+    .btn-submit { background-color: var(--accent-color); color: white; margin-top: 20px; width: 100%; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h2>❓ WOLFO CHESS QUIZ</h2>
+    <div class="nav-links">
+      <button class="theme-btn" id="themeToggle">🌓</button>
+      <a href="welcome.html" class="btn" style="color:white; text-decoration:none;">חזרה ללובי</a>
+    </div>
+  </div>
+
+  <h1>❓ חידון השחמט הגדול</h1>
+  <div class="quiz-container card">
+    <h3>שאלה 1: איזה כלי שחמט יכול לקפוץ מעל כלים אחרים?</h3>
+    <label class="option"><input type="radio" name="q1" value="wrong"> א. הצריח</label>
+    <label class="option"><input type="radio" name="q1" value="correct"> ב. הפרש</label>
+    
+    <h3>שאלה 2: כמה משבצות זז המלך בכל תור?</h3>
+    <label class="option"><input type="radio" name="q2" value="correct"> א. משבצת אחת בלבד</label>
+    <label class="option"><input type="radio" name="q2" value="wrong"> ב. ללא הגבלה</label>
+    <br>
+    <button class="btn btn-submit" onclick="checkQuiz()">בדוק תוצאה 📑</button>
+  </div>
+
+  <script>
+    if (localStorage.getItem("theme") === "light") { document.body.classList.add("light-mode"); }
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+      localStorage.setItem("theme", document.body.classList.contains("light-mode") ? "light" : "dark");
+    });
+
+    function checkQuiz() {
+      const q1 = document.querySelector('input[name="q1"]:checked');
+      const q2 = document.querySelector('input[name="q2"]:checked');
+      
+      if (!q1 || !q2) { alert("אנא ענה על כל השאלות לפני הבדיקה!"); return; }
+      
+      let score = 0;
+      if (q1.value === "correct") score++;
+      if (q2.value === "correct") score++;
+      
+      alert(`קיבלת ציון של: ${score}/2 משאלות נכונות!`);
+    }
+  </script>
+</body>
+</html>

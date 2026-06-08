@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>אודות - Wolfo Chess</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about-container { max-width: 700px; margin: 40px auto; padding: 30px; text-align: right; line-height: 1.6; }
+    .about-container h1 { color: var(--accent-color); text-align: center; margin-bottom: 30px; }
+    .about-container h2 { color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-top: 30px; }
+    .features-list { margin-right: 20px; padding: 0; }
+    .features-list li { margin-bottom: 10px; color: var(--text-muted); }
+    .features-list strong { color: var(--text-main); }
+    .btn-back { display: block; width: fit-content; margin: 30px auto 0 auto; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h2>♟️ WOLFO CHESS ABOUT</h2>
+    <div class="nav-links">
+      <button class="theme-btn" id="themeToggle">🌓</button>
+      <a href="welcome.html" class="btn" style="color:white; text-decoration:none; font-size: 16px;">חזרה ללובי</a>
+    </div>
+  </div>
+
+  <div class="about-container card">
+    <h1>♟️ אודות הפרויקט - Wolfo Chess</h1>
+    
+    <p>ברוכים הבאים ל-<strong>Wolfo Chess</strong>, פלטפורמת שחמט דינמית ומקצועית שנבנתה במטרה להנגיש את עולם השחמט בצורה חווייתית, נקייה ומודרנית ישירות דרך הדפדפן.</p>
+    
+    <h2>🚀 מה הופך את הפלטפורמה למיוחדת?</h2>
+    <ul class="features-list">
+      <li><strong>זירת משחק מקומית מתקדמת:</strong> מנוע משחק מלא התומך בחוקי השחמט הרשמיים, כולל מנגנון הצרחות (קצרות וארוכות), מצבי תיקו כפוי (פט), בדיקת שח ומנגנון הכתרת רגלי חופשי ומלא.</li>
+      <li><strong>ניהול זמנים גמיש:</strong> מערכת שעונים דינמית המאפשרת לבחור בין מגוון קצבי משחק מוכרים - החל מקליע (דקה אחת), בליץ מהיר (3 או 5 דקות) ועד למשחק מהיר ומחושב (10 דקות).</li>
+      <li><strong>חוויית משתמש מותאמת (Global Theme):</strong> סנכרון מלא של Dark Mode ו-Light Mode לכל אורך האתר, השומר על העדפת המשתמש בזיכרון המקומי ומאפשר מעבר חלק ונוח בין הדפים ללא פלאשים של אור.</li>
+      <li><strong>מדריכים אינטראקטיביים:</strong> לוח הדמיה ויזואלי המציג בצורה פשוטה וברורה כיצד כל כלי נע על גבי הלוח.</li>
+      <li><strong>חידון ידע מאתגר:</strong> כלי לבחינת רמת ההבנה של חוקי השחמט הבסיסיים והמתקדמים.</li>
+    </ul>
+
+    <h2>💻 הטכנולוגיה מאחורי הקלעים</h2>
+    <p>האתר בנוי על תשתית פרונט-אנד מודרנית ונקייה המשלבת HTML5, CSS3 מתקדם מבוסס משתנים דינמיים, ו-JavaScript רספונסיבי. ניהול המשתמשים, האבטחה ופאנל הניהול הסודי מבוססים על מערכת <strong>Firebase Auth</strong> ו-<strong>Cloud Firestore</strong>, המבטיחים שמירה בטוחה של נתוני המשתמשים וגישה מבוקרת למנהלי המערכת לקריאה ומחיקה.</p>
+
+    <a href="welcome.html" class="btn btn-back">חזרה ללובי המשחק ⚔️</a>
+  </div>
+
+  <script>
+    if (localStorage.getItem("theme") === "light") { document.body.classList.add("light-mode"); }
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+      localStorage.setItem("theme", document.body.classList.contains("light-mode") ? "light" : "dark");
+    });
+  </script>
+</body>
+</html>

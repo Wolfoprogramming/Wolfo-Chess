@@ -1,0 +1,90 @@
+/* --- משתני צבעים כברירת מחדל (Dark Mode) --- */
+:root {
+  --bg-color: #312e2b;
+  --panel-bg: #262421;
+  --border-color: #403e3b;
+  --text-main: #ffffff;
+  --text-muted: #bababa;
+  --accent-color: #85a94e;
+  --input-bg: #1e1c1a;
+}
+
+/* --- משתני צבעים למצב בהיר (Light Mode) --- */
+body.light-mode {
+  --bg-color: #f5f5f5;
+  --panel-bg: #ffffff;
+  --border-color: #d1d1d1;
+  --text-main: #262421;
+  --text-muted: #555555;
+  --accent-color: #5a802d;
+  --input-bg: #fafafa;
+}
+
+/* --- עיצובים כלליים מבוססי משתנים --- */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  margin: 0;
+  padding: 10px;
+  transition: background 0.2s, color 0.2s;
+}
+
+h1, h2, h3 { color: var(--accent-color); }
+p, label, li { color: var(--text-muted); }
+
+/* סרגל ניווט עליון אחיד */
+.navbar {
+  background-color: var(--panel-bg);
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-color);
+  margin: -10px -10px 20px -10px;
+}
+.navbar h2 { margin: 0; color: var(--accent-color); }
+.nav-links a, .theme-btn {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+.nav-links a:hover, .theme-btn:hover { color: var(--text-main); }
+
+/* כפתורים כלליים */
+.btn {
+  background-color: #454545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+.btn:hover { background-color: var(--accent-color); }
+
+/* כרטיסיות, טבלאות ורכיבי תוכן מגיבי נושא */
+.card, .learning-card, .quiz-container, table {
+  background-color: var(--panel-bg) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+/* שדות קלט בכל האתר */
+input, select, textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 10px;
+  border-radius: 4px;
+}

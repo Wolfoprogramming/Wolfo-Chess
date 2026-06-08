@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>התחברות - Wolfo Chess</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { padding-top: 50px; }
+    .login-container { width: 350px; margin: 0 auto; padding: 30px; }
+    .input-group { margin-bottom: 20px; text-align: right; }
+    .input-group label { display: block; margin-bottom: 5px; font-size: 14px; }
+    .input-group input { width: 100%; font-size: 16px; text-align: left; }
+    .password-wrapper { position: relative; display: flex; align-items: center; }
+    .toggle-password { position: absolute; left: 10px; background: none; border: none; cursor: pointer; font-size: 18px; }
+    .btn-login { width: 100%; margin-top: 10px; }
+    .link-reg { display: inline-block; margin-top: 15px; color: var(--accent-color); text-decoration: none; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="login-container card">
+    <h2>♟️ WOLFO CHESS</h2>
+    <form id="loginForm">
+      <div class="input-group">
+        <label>אימייל:</label>
+        <input type="email" id="email" required placeholder="your@email.com">
+      </div>
+      <div class="input-group">
+        <label>סיסמה:</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" required>
+          <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-login">התחבר ⚔️</button>
+    </form>
+    <a href="register.html" class="link-reg">עדיין אין לך משתמש? הרשם כאן</a>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7Rn-xp2jzy4jZy_tVIWHc1aMzIr6J7a8",
+      authDomain: "wolfo-8d591.firebaseapp.com",
+      projectId: "wolfo-8d591",
+      storageBucket: "wolfo-8d591.firebasestorage.app",
+      messagingSenderId: "568048252668",
+      appId: "1:568048252668:web:8d1aa4ca3a37bd324e4979"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    if (localStorage.getItem("theme") === "light") { document.body.classList.add("light-mode"); }
+
+    const passwordInput = document.getElementById("password");
+    const togglePasswordBtn = document.getElementById("togglePassword");
+
+    // תיקון מנגנון הצגת/הסתרת סיסמה
+    togglePasswordBtn.addEventListener("click", () => {
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePasswordBtn.textContent = "🔒";
+      } else {
+        passwordInput.type = "password";
+        togglePasswordBtn.textContent = "👁️";
+      }
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = passwordInput.value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "welcome.html";
+      } catch (error) {
+        alert("שגיאה בהתחברות: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

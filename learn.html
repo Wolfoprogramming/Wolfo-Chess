@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>לימוד חוקי השחמט - Wolfo Chess</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .subtitle { font-size: 16px; margin-bottom: 40px; }
+    .learning-container { display: flex; flex-direction: column; gap: 40px; max-width: 800px; margin: 0 auto; padding-bottom: 50px; }
+    .learning-card { display: flex; align-items: center; justify-content: space-between; padding: 20px; text-align: right; }
+    .info-side { flex: 1; padding-left: 20px; }
+    .info-side h2 { margin-top: 0; }
+    .board-side { display: grid; grid-template-columns: repeat(8, 35px); grid-template-rows: repeat(8, 35px); border: 2px solid #262421; }
+    .square { display: flex; justify-content: center; align-items: center; font-size: 22px; user-select: none; }
+    .square.light { background-color: #eeeed2; }
+    .square.dark { background-color: #769656; }
+    .square.highlight::after { content: ""; width: 10px; height: 10px; background-color: rgba(133, 169, 78, 0.7); border-radius: 50%; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h2>♟️ WOLFO CHESS</h2>
+    <div class="nav-links">
+      <button class="theme-btn" id="themeToggle">🌓</button>
+      <a href="welcome.html" class="btn" style="color:white; text-decoration:none; font-size: 16px;">חזרה ללובי</a>
+    </div>
+  </div>
+
+  <h1>איך הכלים זזים?</h1>
+  <p class="subtitle">לפניך מדריך חזותי המציג את תנועות הכלים הבסיסיות והמלאות בשחמט.</p>
+
+  <div class="learning-container">
+    <div class="learning-card">
+      <div class="info-side">
+        <h2>הצריח (Rook) ♖</h2>
+        <p>נע בקווים ישרים בלבד – קדימה, אחורה, ימינה ושמאלה, לכל מרחק שירצה, כל עוד אין כלי שחוסם אותו.</p>
+      </div>
+      <div class="board-side" id="boardRook"></div>
+    </div>
+
+    <div class="learning-card">
+      <div class="info-side">
+        <h2>הרץ (Bishop) ♗</h2>
+        <p>נע באלכסונים בלבד לכל מרחק. רץ שמתחיל על משבצת בהירה יישאר תמיד על משבצות בהירות, וכנ"ל לגבי משבצת כהה.</p>
+      </div>
+      <div class="board-side" id="boardBishop"></div>
+    </div>
+
+    <div class="learning-card">
+      <div class="info-side">
+        <h2>המלך (King) ♔</h2>
+        <p>הכלי החשוב ביותר במשחק. הוא יכול לזוז לכל כיוון (ישר או אלכסון) אך רק משבצת אחת בכל תור.</p>
+      </div>
+      <div class="board-side" id="boardKing"></div>
+    </div>
+
+    <div class="learning-card">
+      <div class="info-side">
+        <h2>המלכה (Queen) ♕</h2>
+        <p>הכלי החזק ביותר על הלוח. המלכה משלבת את היכולות של הצריח והרץ ביחד – נעה לכל מרחק קדימה, אחורה, לצדדים ובאלכסונים.</p>
+      </div>
+      <div class="board-side" id="boardQueen"></div>
+    </div>
+
+    <div class="learning-card">
+      <div class="info-side">
+        <h2>הפרש (Knight) ♘</h2>
+        <p>הכלי הייחודי ביותר. הוא נע בצורת האות L (שתי משבצות לכיוון אחד ואז משבצת אחת הצידה) והוא הכלי היחיד שיכול לקפוץ מעל כלים אחרים.</p>
+      </div>
+      <div class="board-side" id="boardKnight"></div>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem("theme") === "light") { document.body.classList.add("light-mode"); }
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+      localStorage.setItem("theme", document.body.classList.contains("light-mode") ? "light" : "dark");
+    });
+
+    const guides = [
+      { id: "boardRook", type: "rook", row: 3, col: 4, char: "♖" },
+      { id: "boardBishop", type: "bishop", row: 4, col: 3, char: "♗" },
+      { id: "boardKing", type: "king", row: 3, col: 3, char: "♔" },
+      { id: "boardQueen", type: "queen", row: 3, col: 3, char: "♕" },
+      { id: "boardKnight", type: "knight", row: 4, col: 4, char: "♘" }
+    ];
+
+    function getGuideMoves(row, col, type) {
+      const moves = [];
+      if (type === "rook") {
+        for(let i=0; i<8; i++) { if(i!==row) moves.push({r:i, c:col}); if(i!==col) moves.push({r:row, c:i}); }
+      }
+      if (type === "bishop") {
+        for(let i=1; i<8; i++) {
+          moves.push({r:row+i, c:col+i},{r:row-i, c:col-i},{r:row+i, c:col-i},{r:row-i, c:col+i});
+        }
+      }
+      if (type === "king") {
+        const dirs = [{r:1,c:0},{r:-1,c:0},{r:0,c:1},{r:0,c:-1},{r:1,c:1},{r:1,c:-1},{r:-1,c:1},{r:-1,c:-1}];
+        dirs.forEach(d => moves.push({r: row + d.r, c: col + d.c}));
+      }
+      if (type === "queen") {
+        for(let i=0; i<8; i++) { if(i!==row) moves.push({r:i, c:col}); if(i!==col) moves.push({r:row, c:i}); }
+        for(let i=1; i<8; i++) {
+          moves.push({r:row+i, c:col+i},{r:row-i, c:col-i},{r:row+i, c:col-i},{r:row-i, c:col+i});
+        }
+      }
+      if (type === "knight") {
+        const kMoves = [{r:2,c:1},{r:2,c:-1},{r:-2,c:1},{r:-2,c:-1},{r:1,c:2},{r:1,c:-2},{r:-1,c:2},{r:-1,c:-2}];
+        kMoves.forEach(m => moves.push({r: row + m.r, c: col + m.c}));
+      }
+      return moves.filter(m => m.r >= 0 && m.r < 8 && m.c >= 0 && m.c < 8);
+    }
+
+    function buildLearningBoards() {
+      guides.forEach(g => {
+        const boardContainer = document.getElementById(g.id);
+        if (!boardContainer) return;
+        const allowedMoves = getGuideMoves(g.row, g.col, g.type);
+
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const square = document.createElement("div");
+            square.classList.add("square", (r + c) % 2 === 0 ? "light" : "dark");
+
+            if (r === g.row && c === g.col) {
+              square.innerText = g.char;
+              square.style.color = "#ffffff";
+              square.style.textShadow = "0px 0px 4px #000000";
+            } else if (allowedMoves.some(m => m.r === r && m.c === c)) {
+              square.classList.add("highlight");
+            }
+
+            boardContainer.appendChild(square);
+          }
+        }
+      });
+    }
+
+    buildLearningBoards();
+  </script>
+</body>
+</html>
