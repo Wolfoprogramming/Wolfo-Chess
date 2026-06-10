@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>הרשמה - Wolfo Chess</title>
-  <link rel="stylesheet" href="style.css">
   <style>
-    body { padding-top: 50px; }
-    .register-container { width: 350px; margin: 0 auto; padding: 30px; }
+    body { font-family: Arial, sans-serif; background-color: #1e293b; color: #ffffff; padding-top: 50px; text-align: center; }
+    .card { background: #0f172a; border: 1px solid #334155; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .register-container { width: 350px; margin: 0 auto; }
     .input-group { margin-bottom: 20px; text-align: right; }
-    .input-group label { display: block; margin-bottom: 5px; font-size: 14px; }
-    .input-group input { width: 100%; font-size: 16px; text-align: left; }
-    .password-wrapper { position: relative; display: flex; align-items: center; }
-    .toggle-password { position: absolute; left: 10px; background: none; border: none; cursor: pointer; font-size: 18px; }
-    .btn-register { width: 100%; margin-top: 10px; }
-    .link-login { display: inline-block; margin-top: 15px; color: var(--accent-color); text-decoration: none; font-weight: bold; }
+    .input-group label { display: block; margin-bottom: 5px; font-size: 14px; color: #94a3b8; }
+    .input-group input { width: 100%; font-size: 16px; padding: 8px; border-radius: 4px; border: 1px solid #334155; background-color: #1e293b; color: white; }
+    .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; display: inline-block; }
+    .btn-register { background-color: #85a94e; color: white; }
+    .btn-register:hover { background-color: #6a883e; }
+    .link-login { display: inline-block; margin-top: 15px; color: #3b82f6; text-decoration: none; font-weight: bold; }
+    .link-login:hover { text-decoration: underline; }
+
+    /* מיקום העין בצד שמאל של תיבת הסיסמה */
+    .password-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+    .password-wrapper input { width: 100%; padding-left: 40px; box-sizing: border-box; font-size: 16px; text-align: left; }
+    .toggle-password { position: absolute; left: 10px; background: none; border: none; cursor: pointer; font-size: 18px; z-index: 10; padding: 0; margin: 0; color: white; }
   </style>
 </head>
 <body>
@@ -59,16 +65,23 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    if (localStorage.getItem("theme") === "light") { document.body.classList.add("light-mode"); }
-
     const registerPasswordInput = document.getElementById("registerPassword");
     const toggleRegisterPasswordBtn = document.getElementById("toggleRegisterPassword");
 
-    // תיקון מלא של כפתור העין בדף ההרשמה
+    // פונקציית בדיקת אנגלית לשם המשתמש (דרישת חובה במחוון המורה)
+    function isEnglish(text) {
+      return /^[A-Za-z]+$/.test(text);
+    }
+
+    // פונקציית בדיקת חוזק סיסמה (אות גדולה אחת ולפחות 6 תווים - דרישת המורה)
+    function isValidPassword(password) {
+      return /[A-Z]/.test(password) && password.length >= 6;
+    }
+
     toggleRegisterPasswordBtn.addEventListener("click", () => {
       if (registerPasswordInput.type === "password") {
         registerPasswordInput.type = "text";
-        toggleRegisterPasswordBtn.textContent = "🔒";
+        toggleRegisterPasswordBtn.textContent = "🙈";
       } else {
         registerPasswordInput.type = "password";
         toggleRegisterPasswordBtn.textContent = "👁️";
@@ -80,6 +93,18 @@
       const username = document.getElementById("username").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = registerPasswordInput.value;
+
+      // 1. בדיקת תקינות שם משתמש באנגלית בלבד
+      if (!isEnglish(username)) {
+        alert("שם המשתמש חייב להכיל אותיות באנגלית בלבד (A-Z, a-z)!");
+        return; // עוצר את הרישום ולא ממשיך ל-Firebase
+      }
+
+      // 2. בדיקת תקינות סיסמה (לפחות 6 תווים ואות גדולה אחת)
+      if (!isValidPassword(password)) {
+        alert("הסיסמה חייבת להיות באורך של 6 תווים לפחות ולהכיל לפחות אות גדולה אחת באנגלית (A-Z)!");
+        return; // עוצר את הרישום ולא ממשיך ל-Firebase
+      }
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
