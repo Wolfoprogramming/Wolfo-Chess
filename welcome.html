@@ -7,53 +7,98 @@
   <style>
     .container { padding: 30px; }
     .menu { display: flex; justify-content: center; gap: 20px; margin-top: 40px; flex-wrap: wrap; }
-    .card { padding: 30px; width: 220px; cursor: pointer; transition: 0.3s; }
+    .card { padding: 30px; width: 220px; cursor: pointer; transition: 0.3s; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; }
     .card:hover { transform: translateY(-5px); border-color: var(--accent-color) !important; }
     .card h3 { margin-top: 0; }
     .admin-box { margin-top: 40px; display: none; }
+    
+    .btn-register-guest { background-color: #10b981; color: white; font-weight: bold; }
+    .btn-register-guest:hover { background-color: #059669; }
+    
+    /* עיצוב לכרטיסיות חסומות */
+    .card-disabled { opacity: 0.5; cursor: not-allowed !important; filter: grayscale(80%); }
+    .card-disabled:hover { transform: none; border-color: inherit !important; }
+
+    /* באנר תמונה ראשי עם כיתוב מעליו (תוספת חדשה) */
+    .hero-banner {
+      position: relative;
+      max-width: 800px;
+      margin: 20px auto;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .hero-banner img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(55%); /* הכהיית התמונה כדי שהטקסט יבלוט */
+    }
+    .hero-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffff;
+      font-size: 42px;
+      font-weight: bold;
+      font-family: 'Arial Black', sans-serif;
+      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.9); /* צל יוקרתי לטקסט */
+      letter-spacing: 3px;
+    }
   </style>
 </head>
 <body>
 
   <div class="navbar">
-    <h2>👑 WOLFO CHESS</h2>
+    <h2>♟️ WOLFO CHESS</h2>
     <div class="nav-links">
       <button class="theme-btn" id="themeToggle">🌓</button>
-      <a href="about.html" style="font-size: 16px;">ℹ️ אודות</a>
-      <button id="logoutBtn" class="theme-btn" style="font-size: 16px;">התנתק 🚪</button>
+      <button class="btn" id="logoutBtn" onclick="logout()">יציאה 🚪</button>
     </div>
   </div>
 
+  <div class="hero-banner">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Chess_pieces_close_up.jpg" alt="Wolfo Chess Banner">
+    <div class="hero-text">Wolfo Chess</div>
+  </div>
+
   <div class="container">
-    <h1 id="welcomeText">ברוך הבא, טוען נתונים... 👋</h1>
-    <p class="subtitle">בחר לאן תרצה להמשיך מכאן:</p>
+    <h1 id="welcomeText">טוען נתונים... 👋</h1>
 
     <div class="menu">
-      <div class="card" onclick="window.location.href='game.html'">
-        <h3>⚔️ זירה מקומית</h3>
-        <p>שחק נגד חבר על אותו מסך, כולל שעונים וחוקים מלאים.</p>
+      <div class="card" id="gameCard" onclick="handleProtectedFeature('game.html')">
+        <h3>🎮 משחק שחמט</h3>
+        <p>שחק נגד חבר עם שעון זמן מקצועי</p>
       </div>
-      <div class="card" onclick="window.location.href='learn.html'">
-        <h3>📚 מדריכי לימוד</h3>
-        <p>למד איך כל כלי זז על הלוח בצורה אינטראקטיבית וויזואלית.</p>
+      <div class="card" id="learnCard" onclick="window.location.href='learn.html'">
+        <h3>📚 לימוד חוקים</h3>
+        <p>למד כיצד הכלים נעים על הלוח</p>
       </div>
-      <div class="card" onclick="window.location.href='quiz.html'">
-        <h3>❓ חידון הידע</h3>
-        <p>בחן את רמת השחמט שלך וענה על שאלות חוקים מאתגרות.</p>
+      <div class="card" id="quizCard" onclick="handleProtectedFeature('quiz.html')">
+        <h3>❓ חידון שחמט</h3>
+        <p>בחן את הידע שלך בחוקי המשחק</p>
+      </div>
+      <div class="card" onclick="window.location.href='about.html'">
+        <h3>ℹ️ אודות</h3>
+        <p>קרא על הפרויקט והסיפור מאחוריו</p>
       </div>
     </div>
 
-    <div class="admin-box" id="adminBox">
-      <hr style="border-color: var(--border-color); margin: 40px 0;">
-      <button class="btn" style="background-color: #cb3837;" onclick="window.location.href='admin.html'">⚙️ כניסה לפאנל ניהול מערכת סודי</button>
+    <div id="adminBox" class="admin-box">
+      <div class="card" style="border-color: #cb3837 !important; width: auto; max-width: 400px; margin: 0 auto;" onclick="window.location.href='admin.html'">
+        <h3 style="color: #cb3837;">⚙️ פאנל מנהל מערכת</h3>
+        <p>ניהול משתמשים, שינוי תפקידים ומחיקה</p>
+      </div>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-    
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyD7Rn-xp2jzy4jZy_tVIWHc1aMzIr6J7a8",
       authDomain: "wolfo-8d591.firebaseapp.com",
@@ -62,38 +107,60 @@
       messagingSenderId: "568048252668",
       appId: "1:568048252668:web:8d1aa4ca3a37bd324e4979"
     };
-    
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const themeToggle = document.getElementById("themeToggle");
+    // לוגיקת החלפת מצב אור/חושך
     if (localStorage.getItem("theme") === "light") { document.body.classList.add("light-mode"); }
+    const themeToggle = document.getElementById("themeToggle");
     themeToggle.addEventListener("click", () => {
       document.body.classList.toggle("light-mode");
       localStorage.setItem("theme", document.body.classList.contains("light-mode") ? "light" : "dark");
     });
 
     onAuthStateChanged(auth, async (user) => {
+      if (localStorage.getItem("guestMode") === "true") {
+        document.getElementById("welcomeText").innerText = "ברוך הבא, אורח! 👋";
+        document.getElementById("logoutBtn").innerText = "יציאה ממצב אורח 🚪";
+        
+        // חסימה ויזואלית של המשחק והחידון לאורחים
+        document.getElementById("gameCard").classList.add("card-disabled");
+        document.getElementById("quizCard").classList.add("card-disabled");
+        return;
+      }
+
       if (user) {
-        const docSnap = await getDoc(doc(db, "users", user.uid));
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          document.getElementById("welcomeText").innerText = "ברוך הבא, " + userData.username + "! 👋";
-          
-          // בדיקה מעודכנת לפי המייל החדש שלך
-          if (userData.role === "admin" || user.email.toLowerCase() === "danielwo2010@gmail.com") {
-            document.getElementById("adminBox").style.display = "block";
+        try {
+          const docSnap = await getDoc(doc(db, "users", user.uid));
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            document.getElementById("welcomeText").innerText = "ברוך הבא, " + (userData.username || "משתמש") + "! 👋";
+            if (userData.role === "admin" || user.email.toLowerCase() === "danielwo2010@gmail.com") {
+              document.getElementById("adminBox").style.display = "block";
+            }
           }
-        }
+        } catch (err) { console.error(err); }
       } else {
         window.location.href = "index.html";
       }
     });
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => { window.location.href = "index.html"; });
-    });
+    // פונקציה אחידה לבדיקת הרשאות בדפים מוגנים
+    window.handleProtectedFeature = function(pageUrl) {
+      if (localStorage.getItem("guestMode") === "true") {
+        alert("🔒 גישה חסומה! פיצ'ר זה שמור למשתמשים רשומים בלבד. אנא הירשם לאתר כדי ליהנות מהמשחקים והחידונים.");
+      } else {
+        window.location.href = pageUrl;
+      }
+    };
+
+    window.logout = async function() {
+      localStorage.removeItem("guestMode");
+      await signOut(auth);
+      window.location.href = "index.html";
+    };
   </script>
 </body>
 </html>
