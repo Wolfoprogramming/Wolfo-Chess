@@ -31,8 +31,17 @@
     <h3>שאלה 2: כמה משבצות זז המלך בכל תור?</h3>
     <label class="option"><input type="radio" name="q2" value="correct"> א. משבצת אחת בלבד</label>
     <label class="option"><input type="radio" name="q2" value="wrong"> ב. ללא הגבלה</label>
+
+    <h3>שאלה 3: מה קורה כאשר רגלי (פיון) מגיע לשורה האחרונה של הלוח?</h3>
+    <label class="option"><input type="radio" name="q3" value="correct"> א. הוא הופך לכלי אחר לבחירת השחקן (מלכה, צריח, רץ או פרש)</label>
+    <label class="option"><input type="radio" name="q3" value="wrong"> ב. הוא מוסר מהלוח והשחקן מפסיד אותו</label>
+
+    <h3>שאלה 4: מהו מצב של 'פט' (Stalemate) בשחמט?</h3>
+    <label class="option"><input type="radio" name="q4" value="wrong"> א. מצב שבו המלך מאוים בשח ואין לו לאן לברוח (הפסד)</label>
+    <label class="option"><input type="radio" name="q4" value="correct"> ב. מצב שבו המלך אינו בשח, אך לשחקן אין אף מהלך חוקי (תיקו)</label>
+    
     <br>
-    <button class="btn btn-submit" onclick="checkQuiz()">בדוק תוצאה 📑</button>
+    <button class="btn btn-submit" onclick="checkQuiz()">בדוק תוצאה 📝</button>
   </div>
 
   <script>
@@ -46,14 +55,19 @@
     function checkQuiz() {
       const q1 = document.querySelector('input[name="q1"]:checked');
       const q2 = document.querySelector('input[name="q2"]:checked');
+      const q3 = document.querySelector('input[name="q3"]:checked');
+      const q4 = document.querySelector('input[name="q4"]:checked');
       
-      if (!q1 || !q2) { alert("אנא ענה על כל השאלות לפני הבדיקה!"); return; }
+      // בדיקה שכל 4 השאלות נענו
+      if (!q1 || !q2 || !q3 || !q4) { alert("אנא ענה על כל השאלות לפני הבדיקה!"); return; }
       
       let score = 0;
       if (q1.value === "correct") score++;
       if (q2.value === "correct") score++;
+      if (q3.value === "correct") score++;
+      if (q4.value === "correct") score++;
       
-      alert(`קיבלת ציון של: ${score}/2 משאלות נכונות!`);
+      alert(`קיבלת ציון של: ${score}/4 משאלות נכונות!`);
     }
   </script>
 </body>
